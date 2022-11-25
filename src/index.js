@@ -42,20 +42,26 @@ const io = socket(server, {
   },
 });
 
-const listConnections = new Map();
+let users = []
 
 io.on("connect", socket => {
   console.log("Client Connected " + socket.id);
-  listConnections.set(socket.id, socket);
+
+  socket.on("login", ({ userId }) => {
+    if (users.find(item => item.userId === userId)) {
+      console.log("Error")
+    } else {
+      users.push({ userId: userId, socketId: socket.id });
+      io.emit("list-online", users)
+    }
+  })
 
   socket.on("disconnect", () => {
-    console.log("Client Disconnected " + socket.id);
-    listConnections.delete(socket.id);
+    users = users.filter(item => item.socketId!== socket.id);
   });
 
-  socket.on("private-message", ({ sender, message, receiver }) => {
-    console.log(sender + " " +message + " " + receiver);
-    io.to(receiver).emit("private-message", {
+  socket.on("send-private-message", ({ sender, message, receiver }) => {
+    io.to(receiver).emit("receive-private-message", {
       sender: sender,
       message: message,
       receiver: receiver
