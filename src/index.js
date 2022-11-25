@@ -49,15 +49,15 @@ io.on("connect", socket => {
 
   socket.on("login", ({ userId }) => {
     if (users.find(item => item.userId === userId)) {
-      console.log("Error")
+      io.emit("error", { message: "Load socket error!!!" })
     } else {
       users.push({ userId: userId, socketId: socket.id });
-      socket.emit("list-online", users)
+      io.emit("list-online", users)
     }
   })
 
   socket.on("disconnect", () => {
-    users = users.filter(item => item.socketId!== socket.id);
+    users = users.filter(item => item.socketId !== socket.id);
   });
 
   socket.on("send-private-message", ({ sender, message, receiver }) => {
