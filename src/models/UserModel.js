@@ -22,15 +22,6 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
-  // isAvatarImgSet: {
-  //   type: Boolean,
-  //   default: false,
-  // },
-
-  // avatarImg: {
-  //   type: String,
-  //   default: "",
-  // },
 });
 
 userSchema.pre("save", async function (next) {
