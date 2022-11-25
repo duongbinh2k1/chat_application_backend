@@ -52,7 +52,7 @@ io.on("connect", socket => {
       console.log("Error")
     } else {
       users.push({ userId: userId, socketId: socket.id });
-      io.emit("list-online", users)
+      socket.emit("list-online", users)
     }
   })
 
